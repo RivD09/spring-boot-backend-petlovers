@@ -1,8 +1,11 @@
 package org.velasquez.springbootbackendpetlovers.autenticacion.models.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usuarios;
+import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usuario;
 
-public interface UsuariosRepository extends CrudRepository<Usuarios, Long> {
+import java.util.Optional;
 
+public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
+
+    Optional<Usuario> findByNombre(String nombre);
 }

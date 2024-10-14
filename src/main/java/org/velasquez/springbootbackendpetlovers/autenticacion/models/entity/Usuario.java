@@ -1,5 +1,7 @@
 package org.velasquez.springbootbackendpetlovers.autenticacion.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,17 +11,22 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "usuarios")
-public class Usuarios implements Serializable {
+@Table(name = "usuario")
+public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @NotEmpty
     @Column(nullable = false)
     private String nombre;
+
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean admin;
 
     @NotEmpty
     @Email
@@ -30,11 +37,9 @@ public class Usuarios implements Serializable {
 
     private String telefono;
 
-    @Column(nullable = false)
-    private Date fecha_creacion;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol")
-    private Roles rol;
+    @JsonIgnoreProperties(value={"rol","usuario","hibernateLazyInitializer","handler"}, allowSetters = true)
+    private Rol rol;
 
 }
