@@ -7,18 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.velasquez.springbootbackendpetlovers.administracion.utilities.ClienteRequest;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Rol;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usuario;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.services.IRolService;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.services.IUsuarioService;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.utilities.UsuarioRequest;
+import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Cliente;
+import org.velasquez.springbootbackendpetlovers.clientes.models.services.IClienteService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -30,6 +31,8 @@ public class AutenticacionController {
     private IRolService rolService;
     @Autowired
     private IUsuarioService usuarioService;
+    @Autowired
+    private IClienteService clienteService;
 
     private final Logger log = LoggerFactory.getLogger(AutenticacionController.class);
 
@@ -55,6 +58,39 @@ public class AutenticacionController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{email}")
+    public ResponseEntity<?> getUser(@PathVariable String email){
+        Optional<Usuario> optionalUsuario = null;
+        Usuario usuario = null;
+        Map<String, Object> response = new HashMap<>();
+        try {
+            optionalUsuario = usuarioService.findByEmail(email);
+            usuario = optionalUsuario.orElseThrow();
+            usuario.setPassword(null);
+        }catch (NoSuchElementException e){
+            response.put("mensaje", "Usuario no encontrado");
+            response.put("error", "\"error\", e.getMessage().concat(\": \").concat(e.getMostSpecificCause().getMessage())");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+    }
+
+    @GetMapping("/cliente/{email}")
+    public ResponseEntity<?> getClient(@PathVariable String email){
+        Optional<ClienteRequest> optionalClienteRequest = null;
+        ClienteRequest clienteRequest = null;
+        Map<String, Object> response = new HashMap<>();
+        try {
+            optionalClienteRequest = clienteService.findByEmail(email);
+            clienteRequest = optionalClienteRequest.orElseThrow();
+        }catch (NoSuchElementException e){
+            response.put("mensaje", "Usuario no encontrado");
+            response.put("error", "\"error\", e.getMessage().concat(\": \").concat(e.getMostSpecificCause().getMessage())");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<ClienteRequest>(clienteRequest, HttpStatus.OK);
     }
 
     @PostMapping("/usuarios")

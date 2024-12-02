@@ -9,6 +9,7 @@ import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usua
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.repositories.RolRepository;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.repositories.UsuarioRepository;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.utilities.UsuarioRequest;
+import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Cliente;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,18 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Override
     public Usuario findById(Long id) {
         return usuarioRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Usuario> findByEmail(String email) {
+        Optional<Usuario> userOptional = usuarioRepository.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            Usuario userDb = userOptional.get();
+            return Optional.of(userDb);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Transactional

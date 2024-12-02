@@ -1,13 +1,15 @@
 package org.velasquez.springbootbackendpetlovers.autenticacion.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Cliente;
+
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 @Entity
@@ -41,5 +43,9 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "id_rol")
     @JsonIgnoreProperties(value={"rol","usuario","hibernateLazyInitializer","handler"}, allowSetters = true)
     private Rol rol;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "usuario")
+    private Cliente cliente;
 
 }

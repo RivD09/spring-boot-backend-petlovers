@@ -27,7 +27,6 @@ import java.util.Map;
 import static org.velasquez.springbootbackendpetlovers.autenticacion.TokenJwtConfig.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
     private AuthenticationManager authenticationManager;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -36,12 +35,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = null;
+        String email = null;
         String password = null;
-
         try {
             Usuario usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
-            username = usuario.getNombre();
+            email = usuario.getEmail();
             password = usuario.getPassword();
         } catch (StreamReadException e) {
             e.printStackTrace();
@@ -50,18 +48,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         return this.authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
         Map<String, String> body = new HashMap<>();
-        body.put("message", "Error en la autentificacion con nombre de usuario o password incorrecto");
+        body.put("message", "Error en la autentificación con email o password incorrecto");
         body.put("error", failed.getMessage());
-
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
         response.setStatus(401);
@@ -69,35 +64,31 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
         User user = (User) authResult.getPrincipal();
-        String username = user.getUsername();
+        String email = user.getUsername();
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         boolean isAdmin = roles.stream().anyMatch(rol -> rol.getAuthority().equals("ROLE_ADMIN"));
         Claims claims = Jwts
                 .claims()
                 .add("authorities", new ObjectMapper().writeValueAsString(roles))
-                .add("username", username)
+                .add("email", email)
                 .add("isAdmin", isAdmin)
                 .build();
-
         String jwt = Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .claims(claims)
                 .signWith(SECRET_KEY)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000))
                 .compact();
-
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + jwt);
-
-        Map<String,String> body = new HashMap<>();
+        Map<String, String> body = new HashMap<>();
         body.put("token", jwt);
-        body.put("username", username);
-        body.put("message", String.format("Hola %s has iniciado sesion con exito", username));
-
+        body.put("email", email);
+        body.put("message", String.format("Hola %s, has iniciado sesión con éxito", email));
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
         response.setStatus(200);
     }
 }
+

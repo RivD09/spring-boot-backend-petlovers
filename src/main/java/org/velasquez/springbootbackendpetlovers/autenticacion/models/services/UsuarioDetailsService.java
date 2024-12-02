@@ -26,17 +26,17 @@ public class UsuarioDetailsService implements UserDetailsService {
 
     @Transactional
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByNombre(username);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
 
         if (optionalUsuario.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("Usuario %s no encontrado", username));
+            throw new UsernameNotFoundException(String.format("Usuario con email %s no encontrado", email));
         }
 
         Usuario usuario = optionalUsuario.orElseThrow();
 
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(usuario.getRol().getNombreRol()));
-        return new User(username, usuario.getPassword(), true, true, true, true, authorities);
+        return new User(email, usuario.getPassword(), true, true, true, true, authorities);
     }
 }
