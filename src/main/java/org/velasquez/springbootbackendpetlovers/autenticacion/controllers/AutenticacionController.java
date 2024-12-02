@@ -16,6 +16,7 @@ import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usua
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.services.IRolService;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.services.IUsuarioService;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.utilities.UsuarioRequest;
+import org.velasquez.springbootbackendpetlovers.autenticacion.utilities.UserClientRequest;
 import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Cliente;
 import org.velasquez.springbootbackendpetlovers.clientes.models.services.IClienteService;
 
@@ -119,6 +120,44 @@ public class AutenticacionController {
         response.put("usuario", usuarionew);
 
         return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
+    }
+    @PostMapping("/usuarioCliente")
+    public ResponseEntity<?> createUserClient(@Valid @RequestBody UserClientRequest userClientRequest, BindingResult result){
+        Usuario usuarionew = new Usuario();
+        usuarionew.setNombre(userClientRequest.getNombre());
+        usuarionew.setAdmin(false);
+        usuarionew.setEmail(userClientRequest.getEmail());
+        usuarionew.setPassword(userClientRequest.getPassword());
+        usuarionew.setTelefono(userClientRequest.getTelefono());
+
+        Cliente clientenew = new Cliente();
+        clientenew.setDireccion(userClientRequest.getDireccion());
+        clientenew.setInformacionAdicional(userClientRequest.getInfoAdicional());
+
+
+        Map<String, Object> response = new HashMap<>();
+        if (result.hasErrors()){
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo '" + err.getField() + "' "+err.getDefaultMessage())
+                    .collect(Collectors.toList());
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String,Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            usuarionew = usuarioService.save(usuarionew);
+            clientenew.setUsuario(usuarionew);
+            clientenew = clienteService.save(clientenew);
+        } catch (DataAccessException e){
+            response.put("mensaje", "Error al realizar el registro en la base de datos");
+            response.put("error", e.getMessage().concat(": ".concat(e.getMostSpecificCause().getMessage())));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("mensaje", "El usuario ha sido creado con exito");
+        response.put("usuario", usuarionew);
+
+        return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
+
     }
 
     @PutMapping("/usuarios/{id}")

@@ -53,6 +53,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Override
     public Usuario save(Usuario usuario) {
 
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("El email ya está registrado.");
+        }
         if (usuario.isAdmin()){
             Optional<Rol> optionalRolAdmin = rolService.findByNombreRol("ROLE_ADMIN");
             optionalRolAdmin.ifPresent(usuario::setRol);

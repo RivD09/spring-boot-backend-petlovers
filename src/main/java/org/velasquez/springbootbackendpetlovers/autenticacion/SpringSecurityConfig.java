@@ -44,6 +44,7 @@ public class SpringSecurityConfig {
         return http.authorizeHttpRequests(authz ->
                 authz
                         .requestMatchers(HttpMethod.GET, "/apiAutenticacion/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/apiAutenticacion/usuarioCliente").permitAll()
                         .requestMatchers(HttpMethod.GET, "/apiCliente/clientes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/apiCliente/mascotas").permitAll()
                         .requestMatchers(HttpMethod.GET, "/apiAdmin/clientes").hasRole("ADMIN")

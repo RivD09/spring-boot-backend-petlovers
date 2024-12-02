@@ -28,5 +28,16 @@ INSERT INTO cliente (id_usuario, direccion, informacion_adicional) VALUES (9, 'A
 
 INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (3, 10, 1, 'gato', 'naranja', 'Whiskas');
 INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (2, 5, 1, 'gato', 'naranja', 'Ron');
-
 INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (7, 3, 2, 'huron', 'blanco', 'Draco');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (4, 8, 3, 'perro', 'labrador', 'Max');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (1, 2, 3, 'perro', 'chihuahua', 'Bella');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (5, 15, 4, 'gato', 'siamés', 'Simba');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (6, 20, 4, 'gato', 'persa', 'Milo');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (3, 12, 5, 'conejo', 'angora', 'Nube');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (2, 6, 5, 'conejo', 'enano', 'Luna');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (1, 5, 6, 'hamster', 'ruso', 'Rayo');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (2, 7, 6, 'hamster', 'sirio', 'Bolt');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (4, 10, 2, 'tortuga', 'orejas rojas', 'Turbo');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (3, 9, 1, 'loro', 'amazona', 'Pepe');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (5, 3, 3, 'pez', 'betta', 'Nemo');
+INSERT mascota (edad, peso, id_cliente, especie, raza, nombre_mascota) VALUES (1, 0.2, 6, 'pez', 'goldfish', 'Dory');
