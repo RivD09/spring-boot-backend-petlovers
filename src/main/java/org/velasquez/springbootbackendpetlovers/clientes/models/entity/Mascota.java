@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import org.velasquez.springbootbackendpetlovers.citas.models.entity.Cita;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
@@ -41,5 +43,9 @@ public class Mascota implements Serializable {
     @JoinColumn(name = "id_cliente")
     @JsonIgnore
     private Cliente cliente;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mascota", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Cita> cita;
 
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.velasquez.springbootbackendpetlovers.autenticacion.models.entity.Usuario;
+import org.velasquez.springbootbackendpetlovers.citas.models.entity.Cita;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +30,9 @@ public class Cliente implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Mascota> mascotas;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Cita> citas;
 
     // Relación con usuario
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

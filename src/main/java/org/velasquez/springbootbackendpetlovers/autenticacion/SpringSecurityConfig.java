@@ -54,6 +54,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/apiAutenticacion/usuarios/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/apiAutenticacion/usuarios/{}").hasAnyRole("CLIENTE","ADMIN")
                         .requestMatchers(HttpMethod.GET, "/apiAutenticacion/roles").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/apiCita/citas{id}").hasAnyRole("CLIENTE","ADMIN")
                         .anyRequest().authenticated())
                 .cors(cors->cors.configurationSource(configurationSource()))
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))

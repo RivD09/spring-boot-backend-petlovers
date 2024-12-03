@@ -1,8 +1,10 @@
 package org.velasquez.springbootbackendpetlovers.citas.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Cliente;
 import org.velasquez.springbootbackendpetlovers.clientes.models.entity.Mascota;
 import org.velasquez.springbootbackendpetlovers.informacion.models.entity.Servicio;
 
@@ -33,13 +35,18 @@ public class Cita implements Serializable {
     private String motivo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "id_mascota")
-    //@JsonIgnore
     private Mascota mascota;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente")
+    @JsonIgnoreProperties({"mascotas","citas","hibernateLazyInitializer", "handler"})
+    private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "id_servicio")
-    //@JsonIgnore
     private Servicio servicio;
 
 }
